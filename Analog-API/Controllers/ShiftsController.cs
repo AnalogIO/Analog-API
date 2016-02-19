@@ -7,7 +7,7 @@ using Microsoft.AspNet.Mvc;
 namespace Analog_API.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ShiftsController : Controller
     {
         // GET: api/values
         [HttpGet]
