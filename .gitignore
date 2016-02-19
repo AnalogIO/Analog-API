@@ -236,4 +236,4 @@ _Pvt_Extensions
 .fake/
 
 # Personal config files
-./SECRETS.txt
+SECRETS.json
