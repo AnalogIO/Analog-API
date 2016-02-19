@@ -338,4 +338,5 @@ namespace Analog_API.Models
         [JsonProperty("schedules")]
         public Schedules Schedules { get; set; }
     }
+    
 }

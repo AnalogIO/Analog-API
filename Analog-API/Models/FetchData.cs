@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Analog_API.Models;
 
 namespace Analog_API.Models
 {
     public class FetchData
     {
-        public static bool Login(ApplicationInfo info) {
+        public static async Task<ShiftPlanningApiRequest> Login(ApplicationInfo info) {
             var httpclient = new HttpClient();
             httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -34,20 +34,17 @@ namespace Analog_API.Models
 
 
 
-            var result = httpclient.PostAsync("https://www.shiftplanning.com/api/", content).Result;
+            var result = await httpclient.PostAsync("https://www.shiftplanning.com/api/", content);
 
             // For some reason the response is "text/html". Needs to be changed....
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            var s = result.Content.ReadAsStringAsync().Result;
+            var loginData = JsonConvert.DeserializeObject<ApiResponse<Data>>(await result.Content.ReadAsStringAsync());
 
-            var loginData = JsonConvert.DeserializeObject<LoginData>(result.Content.ReadAsStringAsync().Result);
+            apirequest.Token = loginData.Token;
+            apirequest.Request = null;
 
-
-            var success = result.IsSuccessStatusCode;
-            return success;
+            return apirequest;
         }
-
-
     }
 }

@@ -7,6 +7,9 @@ namespace Analog_API.Models
         [JsonProperty("key")]
         public string Key { get; set; }
 
+        [JsonProperty("token")]
+        public string Token { get; set; }
+
         [JsonProperty("output")]
         public string Output { get; set; }
 
