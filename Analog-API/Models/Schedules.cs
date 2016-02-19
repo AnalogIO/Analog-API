@@ -1,4 +1,5 @@
-﻿namespace Analog_API.Api
+
+namespace Analog_API.Models
 {
     public class Schedules
     {

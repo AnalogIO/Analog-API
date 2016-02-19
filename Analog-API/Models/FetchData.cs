@@ -2,26 +2,26 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using Analog_API.Models;
 
-namespace Analog_API.Api
+namespace Analog_API.Models
 {
-    public class Class1
+    public class FetchData
     {
-        public static void Main(string[] args)
-        {
+        public static bool Login(ApplicationInfo info) {
             var httpclient = new HttpClient();
             httpclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             var apirequest = new ShiftPlanningApiRequest
             {
-                Key = "insert key here",
+                Key = info.Key,
                 Output = "json",
                 Request = new LoginRequest
                 {
                     Module = "staff.login",
                     Method = "GET",
-                    Username = "insert username here",
-                    Password = "insert password here"
+                    Username = info.Username,
+                    Password = info.Password
                 }
             };
 
@@ -45,6 +45,7 @@ namespace Analog_API.Api
 
 
             var success = result.IsSuccessStatusCode;
+            return success;
         }
 
 
