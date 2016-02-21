@@ -248,8 +248,8 @@ namespace Analog_API.Models
         [JsonProperty("ical")]
         public string Ical { get; set; }
 
-        [JsonProperty("24hr")]
-        public string _24hr { get; set; }
+        //[JsonProperty("24hr")]
+        //public string _24hr { get; set; }
 
         [JsonProperty("startday")]
         public string Startday { get; set; }
