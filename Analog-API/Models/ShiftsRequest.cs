@@ -129,7 +129,7 @@ namespace Analog_API.Models
     public class ShiftsEmployee
     {
         [JsonProperty("id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
         //public string avatar { get; set; }
 
         [JsonProperty("name")]

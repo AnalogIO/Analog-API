@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using Newtonsoft.Json;
 using Analog_API.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Analog_API.Controllers
 {
@@ -13,21 +12,11 @@ namespace Analog_API.Controllers
     {
         private readonly ShiftplanningApiClient _client;
 
-        public ShiftsController()
+        public ShiftsController(IConfiguration config)
         {
-            _client = new ShiftplanningApiClient(ReadJsonSecrets());
-        }
+            var appinfo = config.Get<ApplicationInfo>("secrets");
 
-        private static ApplicationInfo ReadJsonSecrets()
-        {
-            using (Stream stream = new FileStream("../../SECRETS.json", FileMode.Open))
-            {
-                using (var r = new StreamReader(stream))
-                {
-                    var json = r.ReadToEnd();
-                    return JsonConvert.DeserializeObject<ApplicationInfo>(json);
-                }
-            }
+            _client = new ShiftplanningApiClient(appinfo);
         }
 
         [HttpGet]

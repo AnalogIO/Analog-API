@@ -9,12 +9,14 @@ using Newtonsoft.Json;
 
 namespace Analog_API.Models
 {
-    public class ShiftplanningApiClient : IDisposable
+    public class ShiftplanningApiClient : IShiftplanningApiClient
     {
         private static readonly JsonSerializer Serializer = new JsonSerializer
         {
             NullValueHandling = NullValueHandling.Ignore
         };
+
+        private static readonly Dictionary<int, EmployeeDto> EmployeeCache = new Dictionary<int, EmployeeDto>();
 
         private readonly HttpClient _client;
         private readonly Task<bool> _loginTask;
@@ -32,31 +34,6 @@ namespace Analog_API.Models
                 Output = "json"
             };
             _loginTask = Login(info.Username, info.Password);
-        }
-
-        private async Task<bool> Login(string username, string password)
-        {
-            var request = new LoginRequest
-            {
-                Module = "staff.login",
-                Method = "GET",
-                Username = username,
-                Password = password
-            };
-
-            using (var result = await _client.PostAsync("", CreateContent(request)))
-            {
-
-                // For some reason the response is "text/html". Needs to be changed....
-                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-                var loginData =
-                    JsonConvert.DeserializeObject<ApiResponse<Data>>(await result.Content.ReadAsStringAsync());
-
-                _apiRequest.Token = loginData.Token;
-
-                return !string.IsNullOrWhiteSpace(loginData.Token);
-            }
         }
 
         public async Task<IEnumerable<Shift>> GetShifts(DateTime? from = null, DateTime? to = null)
@@ -90,8 +67,75 @@ namespace Analog_API.Models
                         {
                             Open = DateTime.Parse(shift.StartTimestamp),
                             Close = DateTime.Parse(shift.EndTimestamp),
-                            EmployeeNames = shift.Employees.Select(emp => emp.Name.Split(' ').First())
+                            EmployeeIds = shift.Employees.Select(emp => new EmployeeMiniDto { Id = emp.Id, Firstname = emp.Name.Split(' ').FirstOrDefault() })
                         });
+            }
+        }
+
+        public async Task<EmployeeDto> GetEmployee(int employeeId)
+        {
+            if (EmployeeCache.ContainsKey(employeeId)) return EmployeeCache[employeeId];
+
+            if (_apiRequest?.Token == null)
+            {
+                if (!await _loginTask)
+                {
+                    throw new InvalidOperationException("Couldn't perform login.");
+                }
+            }
+
+            var request = new EmployeeRequest
+            {
+                Id = employeeId
+            };
+
+            using (var result = await _client.PostAsync("", CreateContent(request)))
+            {
+                result.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var res =
+                    JsonConvert.DeserializeObject<ApiResponse<EmployeeData>>(
+                        await result.Content.ReadAsStringAsync());
+
+                if (res.Status != 1) return null;
+
+                var employee =
+                    new EmployeeDto
+                    {
+                        Id = employeeId,
+                        Firstname = res.Data.firstname,
+                        Lastname = res.Data.lastname,
+                        AvatarUrl = res.Data.avatar?.Large
+                    };
+
+                EmployeeCache.Add(employeeId, employee);
+                return employee;
+            }
+        }
+        
+        #region Private helpers
+        private async Task<bool> Login(string username, string password)
+        {
+            var request = new LoginRequest
+            {
+                Module = "staff.login",
+                Method = "GET",
+                Username = username,
+                Password = password
+            };
+
+            using (var result = await _client.PostAsync("", CreateContent(request)))
+            {
+
+                // For some reason the response is "text/html". Needs to be changed....
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+                var loginData =
+                    JsonConvert.DeserializeObject<ApiResponse<Data>>(await result.Content.ReadAsStringAsync());
+
+                _apiRequest.Token = loginData.Token;
+
+                return !string.IsNullOrWhiteSpace(loginData.Token);
             }
         }
 
@@ -114,6 +158,7 @@ namespace Analog_API.Models
                 }
             }
         }
+        #endregion
         #region IDisposable
         public void Dispose()
         {
