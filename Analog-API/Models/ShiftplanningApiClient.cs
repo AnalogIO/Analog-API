@@ -103,9 +103,8 @@ namespace Analog_API.Models
                     new EmployeeDto
                     {
                         Id = employeeId,
-                        Firstname = res.Data.firstname,
-                        Lastname = res.Data.lastname,
-                        AvatarUrl = res.Data.avatar?.Large
+                        Firstname = res.Data.Firstname,
+                        AvatarUrl = res.Data.Avatar?.Large
                     };
 
                 EmployeeCache.Add(employeeId, employee);
