@@ -12,8 +12,10 @@ namespace Analog_API
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables();
+                .AddJsonFile("appsettings.json");
+            builder.AddJsonFile("../SECRETS.json");
+
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -24,6 +26,7 @@ namespace Analog_API
         {
             // Add framework services.
             services.AddMvc();
+            services.AddSingleton<IConfiguration>(_ => Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
