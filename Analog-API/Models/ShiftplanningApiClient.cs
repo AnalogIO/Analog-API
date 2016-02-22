@@ -118,7 +118,6 @@ namespace Analog_API.Models
         {
             var request = new LoginRequest
             {
-                Module = "staff.login",
                 Method = "GET",
                 Username = username,
                 Password = password
