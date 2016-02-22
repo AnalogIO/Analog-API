@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -16,8 +12,10 @@ namespace Analog_API
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddEnvironmentVariables();
+                .AddJsonFile("appsettings.json");
+            builder.AddJsonFile("../SECRETS.json");
+
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
@@ -28,6 +26,7 @@ namespace Analog_API
         {
             // Add framework services.
             services.AddMvc();
+            services.AddSingleton<IConfiguration>(_ => Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +43,6 @@ namespace Analog_API
         }
 
         // Entry point for the application.
-        public static void Main(string[] args) => Microsoft.AspNet.Hosting.WebApplication.Run<Startup>(args);
+        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

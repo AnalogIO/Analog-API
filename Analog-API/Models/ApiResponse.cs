@@ -2,13 +2,13 @@
 
 namespace Analog_API.Models
 {
-    public class LoginData
+    public class ApiResponse<TData>
     {
         [JsonProperty("status")]
         public int Status { get; set; }
 
         [JsonProperty("data")]
-        public Data Data { get; set; }
+        public TData Data { get; set; }
 
         [JsonProperty("token")]
         public string Token { get; set; }
