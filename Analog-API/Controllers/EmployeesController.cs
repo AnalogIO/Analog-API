@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Analog_API.Models;
 using Microsoft.AspNet.Mvc;
+using ShiftPlanningApiConnection;
 
 namespace Analog_API.Controllers
 {

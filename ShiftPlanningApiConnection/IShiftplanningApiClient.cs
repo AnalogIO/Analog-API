@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Analog_API.Models;
+using ShiftPlanningApiConnection.Models;
 
-namespace Analog_API
+namespace ShiftPlanningApiConnection
 {
     public interface IShiftplanningApiClient : IDisposable
     {

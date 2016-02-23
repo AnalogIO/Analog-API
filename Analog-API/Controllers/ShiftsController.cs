@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using Analog_API.Models;
+using ShiftPlanningApiConnection;
+using ShiftPlanningApiConnection.Models;
 
 namespace Analog_API.Controllers
 {

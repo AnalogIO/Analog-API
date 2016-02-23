@@ -1,13 +1,11 @@
+using ShiftPlanningApiConnection.Models;
 using Newtonsoft.Json;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection.Requests
 {
     public class EmployeeRequest : Request
     {
-        public EmployeeRequest()
-        {
-            Module = "staff.employee";
-        }
+        public EmployeeRequest() : base("staff.employee") { }
 
         [JsonProperty("id")]
         public int Id { get; set; }

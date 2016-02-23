@@ -1,13 +1,10 @@
 using Newtonsoft.Json;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection.Requests
 {
     public class LoginRequest : Request
     {
-        public LoginRequest()
-        {
-            Module = "staff.login";
-        }
+        public LoginRequest() : base("staff.login"){ }
 
         [JsonProperty("username")]
         public string Username { get; set; }

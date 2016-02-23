@@ -3,6 +3,8 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ShiftPlanningApiConnection;
+using ShiftPlanningApiConnection.Models;
 
 namespace Analog_API
 {

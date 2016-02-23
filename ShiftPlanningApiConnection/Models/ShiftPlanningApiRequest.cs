@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
+using ShiftPlanningApiConnection.Requests;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection.Models
 {
     public class ShiftPlanningApiRequest
     {

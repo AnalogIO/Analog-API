@@ -6,8 +6,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using ShiftPlanningApiConnection.Models;
+using ShiftPlanningApiConnection.Requests;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection
 {
     public class ShiftplanningApiClient : IShiftplanningApiClient
     {

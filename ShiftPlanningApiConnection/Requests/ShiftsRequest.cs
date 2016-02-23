@@ -1,7 +1,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection.Requests
 {
     public class ShiftsRequest : Request
     {
@@ -20,10 +20,7 @@ namespace Analog_API.Models
             UpcomingMode = "upcoming",
             RecentMode = "recent";
 
-        public ShiftsRequest()
-        {
-            Module = "schedule.shifts";
-        }
+        public ShiftsRequest() : base("schedule.shifts") { }
 
         [JsonProperty("start_date")]
         public DateTime? StartDate { get; set; }

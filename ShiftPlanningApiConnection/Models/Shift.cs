@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Analog_API.Models
+namespace ShiftPlanningApiConnection.Models
 {
     public class Shift
     {
