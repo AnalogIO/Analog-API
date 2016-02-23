@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using ShiftPlanningApiConnection;
-using ShiftPlanningApiConnection.Models;
+using TamigoApiClient;
+using TamigoApiClient.Models;
+
 
 namespace Analog_API.Controllers
 {
     [Route("api/[controller]")]
     public class ShiftsController : Controller
     {
-        private readonly IShiftplanningApiClient _client;
+        private readonly ITamigoApiClient _client;
 
-        public ShiftsController(IShiftplanningApiClient client)
+        public ShiftsController(ITamigoApiClient client)
         {
             _client = client;
         }
@@ -21,13 +22,26 @@ namespace Analog_API.Controllers
         [Route("today")]
         public async Task<IEnumerable<Shift>> GetToday()
         {
-            return await _client.GetShifts(DateTime.Today, DateTime.Today);
+            return await _client.GetShifts(DateTime.Now);
         }
+
+        //[HttpGet]
+        //[Route("day/{date:string}")]
+        //public async Task<ActionResult> GetDate(string date)
+        //{
+        //    DateTime d;
+        //    if (DateTime.TryParse(date, out d))
+        //    {
+        //        return Ok(await _client.GetShifts(d));
+        //    }
+        //    return HttpBadRequest("Date format should be yyyy-MM-dd");
+        //}
 
         // GET: api/shifts
         [HttpGet]
         public async Task<IEnumerable<Shift>> Get()
         {
+            // Todo: Returns empty. :-(
             return await _client.GetShifts();
         }
 

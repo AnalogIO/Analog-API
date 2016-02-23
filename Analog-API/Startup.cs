@@ -3,8 +3,8 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ShiftPlanningApiConnection;
-using ShiftPlanningApiConnection.Models;
+using TamigoApiClient;
+using TamigoApiClient.Models;
 
 namespace Analog_API
 {
@@ -28,9 +28,11 @@ namespace Analog_API
         {
             // Add framework services.
             services.AddMvc();
+
+            var info = Configuration.Get<ApplicationInfo>("secrets");
             
-            services.AddScoped<IShiftplanningApiClient>(
-                _ => new ShiftplanningApiClient(Configuration.Get<ApplicationInfo>("secrets")));
+            services.AddScoped<ITamigoApiClient>(
+                _ => new TamigoApiClient.TamigoApiClient(info.Username, info.Password));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +46,8 @@ namespace Analog_API
             app.UseStaticFiles();
 
             app.UseMvc();
+
+            
         }
 
         // Entry point for the application.

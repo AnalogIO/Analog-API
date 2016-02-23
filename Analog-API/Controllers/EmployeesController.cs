@@ -1,15 +1,15 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using ShiftPlanningApiConnection;
+using TamigoApiClient;
 
 namespace Analog_API.Controllers
 {
     [Route("api/[controller]")]
     public class EmployeesController : Controller
     {
-        private readonly IShiftplanningApiClient _client;
+        private readonly ITamigoApiClient _client;
 
-        public EmployeesController(IShiftplanningApiClient client)
+        public EmployeesController(ITamigoApiClient client)
         {
             _client = client;
         }
