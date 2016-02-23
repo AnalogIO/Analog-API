@@ -18,24 +18,22 @@ namespace Analog_API.Controllers
             _client = client;
         }
 
-        [HttpGet]
-        [Route("today")]
+        [HttpGet("today")]
         public async Task<IEnumerable<Shift>> GetToday()
         {
             return await _client.GetShifts(DateTime.Now);
         }
 
-        //[HttpGet]
-        //[Route("day/{date:string}")]
-        //public async Task<ActionResult> GetDate(string date)
-        //{
-        //    DateTime d;
-        //    if (DateTime.TryParse(date, out d))
-        //    {
-        //        return Ok(await _client.GetShifts(d));
-        //    }
-        //    return HttpBadRequest("Date format should be yyyy-MM-dd");
-        //}
+        [HttpGet("day/{date}")]
+        public async Task<ActionResult> GetDate(string date)
+        {
+            DateTime d;
+            if (DateTime.TryParse(date, out d))
+            {
+                return Ok(await _client.GetShifts(d));
+            }
+            return HttpBadRequest("Date format should be yyyy-MM-dd");
+        }
 
         // GET: api/shifts
         [HttpGet]

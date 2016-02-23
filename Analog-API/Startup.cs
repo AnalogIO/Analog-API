@@ -46,8 +46,6 @@ namespace Analog_API
             app.UseStaticFiles();
 
             app.UseMvc();
-
-            
         }
 
         // Entry point for the application.
