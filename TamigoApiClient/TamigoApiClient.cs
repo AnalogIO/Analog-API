@@ -51,38 +51,66 @@ namespace TamigoApiClient
                 _token = await _loginTask;
                 if (_token == null) throw new InvalidOperationException("Wrong username or password");
             }
-            HttpResponseMessage result;
-
             if (!date.HasValue)
             {   // Get future
-                result = await _client.GetAsync($"shifts/future/?securitytoken={_token}");
+
+                // Uber hack to retrieve the next week.
+                var dates = new List<DateTime>();
+                var d = DateTime.Today;
+                for (var i = 0; i < 7; i++)
+                {
+                    if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
+                        dates.Add(d);
+                    d = d.AddDays(1);
+                }
+
+                var responseTasks =
+                    dates.Select(
+                        day => _client.GetAsync($"shifts/day/{day.ToString("yyyy-MM-dd")}/?securitytoken={_token}"));
+
+                var shifts = new List<Shift>();
+
+                foreach (var responseTask in responseTasks)
+                {
+                    using (var response = await responseTask)
+                    {
+                        shifts.AddRange(await RetrieveShiftFromResponse(response));
+                    }
+                }
+                return shifts.Where(shift => shift.Close >= DateTime.Now);
+                // hack ends.
             }
             else
             {
-                result = await _client.GetAsync($"shifts/day/{date.Value.ToString("yyyy-MM-dd")}/?securitytoken={_token}");
-            }
-            using (result)
-            {
-                if (result.IsSuccessStatusCode)
+                using (var result = await _client.GetAsync($"shifts/day/{date.Value.ToString("yyyy-MM-dd")}/?securitytoken={_token}"))
                 {
-                    var shifts =
-                        JsonConvert.DeserializeObject<IEnumerable<TamigoShift>>(await result.Content.ReadAsStringAsync());
-
-                    return shifts.GroupBy(shift => shift.StartTime)
-                        .Select(grouping => new Shift
-                        {
-                            Open = grouping.Key,
-                            Close = grouping.First().EndTime,
-                            EmployeeIds = grouping.Select(shift => new EmployeeMiniDto
-                            {
-                                Id = shift.EmployeeId,
-                                Firstname = shift.EmployeeName.Split(' ').First()
-                            })
-                        });
+                    return await RetrieveShiftFromResponse(result);
                 }
             }
-            return new Shift[0];
         }
+
+        private async Task<IEnumerable<Shift>> RetrieveShiftFromResponse(HttpResponseMessage response)
+        {
+            if (response.IsSuccessStatusCode)
+            {
+                var shifts =
+                    JsonConvert.DeserializeObject<IEnumerable<TamigoShift>>(
+                        await response.Content.ReadAsStringAsync());
+
+                return shifts.GroupBy(shift => shift.StartTime)
+                    .Select(grouping => new Shift
+                    {
+                        Open = grouping.Key,
+                        Close = grouping.First().EndTime,
+                        EmployeeIds = grouping.Select(shift => new EmployeeMiniDto
+                        {
+                            Id = shift.EmployeeId,
+                            Firstname = shift.EmployeeName.Split(' ').First()
+                        })
+                    });
+            }
+            return new Shift[0];
+        } 
 
         public Task<EmployeeDto> GetEmployee(int employeeId)
         {
