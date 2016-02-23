@@ -26,7 +26,9 @@ namespace Analog_API
         {
             // Add framework services.
             services.AddMvc();
-            services.AddSingleton<IConfiguration>(_ => Configuration);
+            
+            services.AddScoped<IShiftplanningApiClient>(
+                _ => new ShiftplanningApiClient(Configuration.Get<ApplicationInfo>("secrets")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

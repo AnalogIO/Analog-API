@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Analog_API.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Analog_API.Controllers
 {
     [Route("api/[controller]")]
     public class ShiftsController : Controller
     {
-        private readonly ShiftplanningApiClient _client;
+        private readonly IShiftplanningApiClient _client;
 
-        public ShiftsController(IConfiguration config)
+        public ShiftsController(IShiftplanningApiClient client)
         {
-            var appinfo = config.Get<ApplicationInfo>("secrets");
-
-            _client = new ShiftplanningApiClient(appinfo);
+            _client = client;
         }
 
         [HttpGet]

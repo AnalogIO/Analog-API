@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Analog_API.Models;
 using Microsoft.AspNet.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace Analog_API.Controllers
 {
@@ -10,11 +9,9 @@ namespace Analog_API.Controllers
     {
         private readonly IShiftplanningApiClient _client;
 
-        public EmployeesController(IConfiguration config)
+        public EmployeesController(IShiftplanningApiClient client)
         {
-            var appinfo = config.Get<ApplicationInfo>("secrets");
-
-            _client = new ShiftplanningApiClient(appinfo);
+            _client = client;
         }
 
         // GET api/values/5
