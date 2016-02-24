@@ -61,31 +61,7 @@ namespace TamigoApiClient
                 if (_token == null) throw new InvalidOperationException("Wrong username or password");
             }
             // Get future
-            // Uber hack to retrieve the next week.
-            var dates = new List<DateTime>();
-            var d = DateTime.Today;
-            for (var i = 0; i < 7; i++)
-            {
-                if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday)
-                    dates.Add(d);
-                d = d.AddDays(1);
-            }
-
-            var responseTasks =
-                dates.Select(
-                    day => _client.GetAsync($"shifts/day/{day.ToString("yyyy-MM-dd")}/?securitytoken={_token}"));
-
-            var shifts = new List<Shift>();
-
-            foreach (var responseTask in responseTasks)
-            {
-                using (var response = await responseTask)
-                {
-                    shifts.AddRange(await RetrieveShiftFromResponse(response));
-                }
-            }
-            return shifts;
-            // hack ends.
+            return await GetShifts(DateTime.Today, DateTime.Today.AddDays(7));
         }
 
         public async Task<IEnumerable<Shift>> GetShifts(DateTime date)
@@ -108,7 +84,14 @@ namespace TamigoApiClient
                 _token = await _loginTask;
                 if (_token == null) throw new InvalidOperationException("Wrong username or password");
             }
-            throw new NotImplementedException();
+
+            var result = new List<Shift>();
+            foreach (var date in Enumerable.Range(0, to.Subtract(from).Days + 1).Select(offset => DateTime.Today.AddDays(offset)))
+            {
+                result.AddRange(await GetShifts(date));
+            }
+
+            return result;
         }
 
         private async Task<IEnumerable<Shift>> RetrieveShiftFromResponse(HttpResponseMessage response)
