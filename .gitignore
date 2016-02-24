@@ -237,3 +237,5 @@ _Pvt_Extensions
 
 # Personal config files
 SECRETS.json
+Analog-API/dnx.pid
+Analog-API/nohup.out
