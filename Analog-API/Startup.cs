@@ -45,7 +45,14 @@ namespace Analog_API
 
             app.UseStaticFiles();
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "Default",
+                    template: "",
+                    defaults: new {controller = "Home", action = "Index"}
+                    );
+            });
         }
 
         // Entry point for the application.
