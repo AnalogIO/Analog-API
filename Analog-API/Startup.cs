@@ -30,12 +30,9 @@ namespace Analog_API
             services.AddMvc();
 
             var info = Configuration.Get<ApplicationInfo>("secrets");
-            
-            services.AddScoped<TamigoApiClient.TamigoApiClient>(
-                _ => new TamigoApiClient.TamigoApiClient(info.Username, info.Password));
 
             services.AddSingleton<ITamigoApiClient>(
-                provider => new CachedTamigoClient(provider.GetService<TamigoApiClient.TamigoApiClient>()));
+                provider => new CachedTamigoClient(new TamigoApiClient.TamigoApiClient(info.Username, info.Password)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
