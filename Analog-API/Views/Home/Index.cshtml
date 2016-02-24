@@ -1,0 +1,121 @@
+﻿@using System.Text
+@using System.Threading.Tasks
+@using TamigoApiClient.Models
+@model IEnumerable<Shift>
+@{
+    var shiftnow = Model.SingleOrDefault(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
+}
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+ <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Café Analog</title>
+    <meta name="description" content="When is Cafe Analog open? This site will show you when Analog is open.">
+    <meta name="tags" tags="cafe analog open ITU IT-university close analogue caffe">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="//cafeanalog.dk/css/normalize.css">
+    <link rel="stylesheet" href="//cafeanalog.dk/css/main.css">
+    <link href="//fonts.googleapis.com/css?family=Gudea|Pathway+Gothic+One" rel="stylesheet" type="text/css">
+    <script src="//cafeanalog.dk/js/vendor/modernizr-2.6.2.min.js"></script>
+
+    <meta name="google-site-verification" content="GQr_OfGy4IUUx6t3eRJAZXRTFB0uw3Q3GHQ4-qieUsY"/>
+</head>
+<body>
+    <div id="background">
+        <img src="//cafeanalog.dk/img/bg/open/white_record.gif" alt="">
+    </div>
+    <div id="openingHours" class="longCaptions">
+        <h1><h1>
+                @(shiftnow != null ? Html.Raw("We're Åpen!") : Html.Raw("Were Cløsed!"))
+            </h1> On shift right now:
+            @{
+                if (shiftnow != null)
+                {
+                    var builder = new StringBuilder();
+                    foreach (var employeeMiniDto in shiftnow.EmployeeIds)
+                    {
+                        builder.Append(employeeMiniDto.Firstname).Append(" & ");
+                    }
+                    @Html.Raw(builder.ToString().Substring(0, builder.Length - 3))
+                    ;
+                }
+            }
+            </h1>
+        <h2>Opening hours the next 7 days:</h2>
+        <ol>
+            @{
+                var shifts = new List<Shift>();
+
+                foreach (var shift in Model)
+                {
+                    if (!shifts.Any())
+                    {
+                        shifts.Add(shift);
+                    }
+                    else
+                    {
+                        if (shifts.Last().Close == shift.Open)
+                        {
+                            shifts.Last().Close = shift.Close;
+                        }
+                        else
+                        {
+                            shifts.Add(shift);
+                        }
+                    }
+                }
+
+                foreach (var shift in shifts)
+                {
+                    string dateending;
+
+                    switch (shift.Open.Day)
+                    {
+                        case 1:
+                        case 21:
+                        case 31:
+                            dateending = "st";
+                            break;
+                        case 2:
+                        case 22:
+                            dateending = "nd";
+                            break;
+                        default:
+                            dateending = "th";
+                            break;
+                    }
+
+                    @Html.Raw($"\t\t<li>{shift.Open.DayOfWeek.ToString().Substring(0,3)} {shift.Open.Day}{dateending}: {shift.Open.ToString("HH:mm")} - {shift.Close.ToString("HH:mm")}</li>{Environment.NewLine}");
+                }
+            }
+        </ol>
+
+        <a class="email" href="mailto:analogen@cafeanalog.dk">E-mail us!</a>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="//cafeanalog.dk/js/vendor/jquery-1.9.0.min.js"><\/script>')</script>
+    <script src="//cafeanalog.dk/js/plugins.js"></script>
+    <script src="//cafeanalog.dk/js/main.js"></script>
+
+    <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-38442215-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+    </script>
+</body>
+</html>
+
