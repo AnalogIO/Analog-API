@@ -7,6 +7,7 @@ namespace TamigoApiClient
 {
     public interface ITamigoApiClient : IDisposable
     {
+        Task<bool> IsOpen();
         Task<IEnumerable<Shift>> GetShifts(DateTime? date = null);
         Task<EmployeeDto> GetEmployee(int employeeId);
     }

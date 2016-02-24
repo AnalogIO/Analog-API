@@ -18,6 +18,12 @@ namespace Analog_API.Controllers
             _client = client;
         }
 
+        [HttpGet("~/api/open")]
+        public async Task<IActionResult> GetIsOpen()
+        {
+            return Ok(new {open = await _client.IsOpen()});
+        }
+
         [HttpGet("today")]
         public async Task<IEnumerable<Shift>> GetToday()
         {

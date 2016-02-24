@@ -43,6 +43,16 @@ namespace TamigoApiClient
             return null;
         }
 
+        public async Task<bool> IsOpen()
+        {
+            if (_token == null)
+            {
+                _token = await _loginTask;
+                if (_token == null) throw new InvalidOperationException("Wrong username or password");
+            }
+            return (await GetShifts(DateTime.Today)).Any(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
+        }
+
 
         public async Task<IEnumerable<Shift>> GetShifts(DateTime? date = null)
         {
