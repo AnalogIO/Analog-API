@@ -98,7 +98,7 @@ body
 {
 	color: #333;
 	font-size: 1.5em;
-	font-family: Helvetica, Verdana, Arial, Sans-Serif;
+	font-family: Lato, Helvetica, Arial, sans-serif;
 	text-align: center;
 }
 
@@ -187,12 +187,12 @@ ol
 
 #openingHours
 {
-    font-family: Gudea, Verdana, Arial, Sans-serif;
+    font-family: Lato, Arial, sans-serif;
 }
 
 #openingHours h1
 {
-    font-family: 'Pathway Gothic One', Verdana, Arial, Sans-serif;
+    font-family: Lato, Arial, sans-serif;
     font-size: 5em;
 }
 
