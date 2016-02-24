@@ -102,11 +102,7 @@ namespace TamigoApiClient
                     {
                         Open = grouping.Key,
                         Close = grouping.First().EndTime,
-                        EmployeeIds = grouping.Select(shift => new EmployeeMiniDto
-                        {
-                            Id = shift.EmployeeId,
-                            Firstname = shift.EmployeeName.Split(' ').First()
-                        })
+                        Employees = grouping.Select(shift => shift.EmployeeName.Split(' ').First())
                     });
             }
             return new Shift[0];

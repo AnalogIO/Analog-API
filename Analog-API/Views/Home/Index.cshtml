@@ -39,9 +39,9 @@
                 if (shiftnow != null)
                 {
                     var builder = new StringBuilder();
-                    foreach (var employeeMiniDto in shiftnow.EmployeeIds)
+                    foreach (var employee in shiftnow.Employees)
                     {
-                        builder.Append(employeeMiniDto.Firstname).Append(" & ");
+                        builder.Append(employee).Append(" & ");
                     }
                     @Html.Raw(builder.ToString().Substring(0, builder.Length - 3))
                     ;
