@@ -144,7 +144,7 @@ body #openingHours h1
 
 .longCaptions h1
 {
-	font-size: 3.5em;
+	font-size: 3em;
 }
 
 h2
@@ -193,7 +193,7 @@ ol
 #openingHours h1
 {
     font-family: Lato, Arial, sans-serif;
-    font-size: 5em;
+    font-size: 3em;
 }
 
 #openingHours ol li
