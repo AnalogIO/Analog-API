@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TamigoApiClient;
@@ -45,8 +46,7 @@ namespace Analog_API.Controllers
         [HttpGet]
         public async Task<IEnumerable<Shift>> Get()
         {
-            // Todo: Returns empty. :-(
-            return await _client.GetShifts();
+            return (await _client.GetShifts()).Where(shift => shift.Close > DateTime.Now);
         }
 
         protected override void Dispose(bool disposing)
