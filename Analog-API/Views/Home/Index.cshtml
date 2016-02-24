@@ -34,10 +34,11 @@
     <div id="openingHours" class="longCaptions">
         <h1><h1>
                 @(shiftnow != null ? Html.Raw("We're Åpen!") : Html.Raw("Were Cløsed!"))
-            </h1> On shift right now:
+            </h1>
             @{
                 if (shiftnow != null)
                 {
+                    @Html.Raw("On shift right now:")
                     var builder = new StringBuilder();
                     foreach (var employee in shiftnow.Employees)
                     {
