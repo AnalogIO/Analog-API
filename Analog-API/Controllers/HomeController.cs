@@ -19,7 +19,7 @@ namespace Analog_API.Controllers
         {
             var client = new HttpClient();
 
-            var shifts = JsonConvert.DeserializeObject<IEnumerable<Shift>>(await client.GetStringAsync($"http://{HttpContext.Request.Host}/api/shifts"));
+            var shifts = JsonConvert.DeserializeObject<IEnumerable<Shift>>(await client.GetStringAsync("http://localhost:43655/api/shifts"));
 
             return View(shifts);
         }
