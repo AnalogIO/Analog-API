@@ -33,7 +33,9 @@ namespace TamigoApiClient
 
         public async Task FillCache()
         {
-            if (DateTime.Now - _lastRefresh > FiveMinutes || !_cache.Any())
+            if (DateTime.Now - _lastRefresh > FiveMinutes 
+                || !_cache.Any()
+                || (_cache.Any(shift => shift.Open < DateTime.Now) && DateTime.Now.Subtract(_cache.Where(shift => shift.Open < DateTime.Now).Max(shift => shift.Open)) < DateTime.Now.Subtract(_lastRefresh)))
             {
                 _lastRefresh = DateTime.Now;
                 var newCache = new List<Shift>();
