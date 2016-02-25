@@ -95,12 +95,16 @@
                         case 22:
                             dateending = "nd";
                             break;
+                        case 3:
+                        case 23:
+                            dateending = "rd";
+                            break;
                         default:
                             dateending = "th";
                             break;
                     }
 
-                    @Html.Raw($"\t\t<li>{shift.Open.DayOfWeek.ToString().Substring(0,3)} {shift.Open.Day}{dateending}: {shift.Open.ToString("HH:mm")} - {shift.Close.ToString("HH:mm")}</li>{Environment.NewLine}");
+                    @Html.Raw($"\t\t<li>{shift.Open.DayOfWeek.ToString().Substring(0,3)} {shift.Open.Day}{dateending}: {shift.Open.ToString("HH:mm")} - {shift.Close.ToString("HH:mm")}</li>{Environment.NewLine}")
                 }
             }
         </ol>
@@ -128,4 +132,3 @@
     </script>
 </body>
 </html>
-
