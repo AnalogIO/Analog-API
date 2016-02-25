@@ -111,11 +111,6 @@ namespace TamigoApiClient
                     });
             }
             return new Shift[0];
-        } 
-
-        public Task<EmployeeDto> GetEmployee(int employeeId)
-        {
-            throw new NotImplementedException();
         }
 
         public void Dispose()

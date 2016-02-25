@@ -11,6 +11,5 @@ namespace TamigoApiClient
         Task<IEnumerable<Shift>> GetShifts();
         Task<IEnumerable<Shift>> GetShifts(DateTime date);
         Task<IEnumerable<Shift>> GetShifts(DateTime from, DateTime to);
-        Task<EmployeeDto> GetEmployee(int employeeId);
     }
 }
