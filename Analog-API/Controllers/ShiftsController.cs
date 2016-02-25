@@ -19,10 +19,11 @@ namespace Analog_API.Controllers
             _client = client;
         }
 
-        [HttpGet("~/api/open")]
-        public async Task<IActionResult> GetIsOpen()
+        // GET: api/shifts
+        [HttpGet]
+        public async Task<IEnumerable<Shift>> Get()
         {
-            return Ok(new {open = await _client.IsOpen()});
+            return (await _client.GetShifts()).Where(shift => shift.Close > DateTime.Now);
         }
 
         [HttpGet("today")]
@@ -40,22 +41,6 @@ namespace Analog_API.Controllers
                 return Ok(await _client.GetShifts(d));
             }
             return HttpBadRequest("Date format should be yyyy-MM-dd");
-        }
-
-        // GET: api/shifts
-        [HttpGet]
-        public async Task<IEnumerable<Shift>> Get()
-        {
-            return (await _client.GetShifts()).Where(shift => shift.Close > DateTime.Now);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (disposing)
-            {
-                _client.Dispose();
-            }
         }
     }
 }
