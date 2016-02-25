@@ -22,7 +22,8 @@ namespace TamigoApiClient
 
         public void Dispose()
         {
-            // Don't do anything.
+            _client.Dispose();
+            _cache.Clear();
         }
 
         public async void FillCacheBackground()
@@ -32,7 +33,7 @@ namespace TamigoApiClient
 
         public async Task FillCache()
         {
-            if (DateTime.Now - _lastRefresh > FiveMinutes)
+            if (DateTime.Now - _lastRefresh > FiveMinutes || !_cache.Any())
             {
                 _lastRefresh = DateTime.Now;
                 var newCache = new List<Shift>();
@@ -68,11 +69,6 @@ namespace TamigoApiClient
                 _cache.Exists(shift => shift.Open.Date == to.Date))
                 return _cache.Where(shift => shift.Open > from && shift.Close < to);
             return await _client.GetShifts(from, to);
-        }
-
-        public Task<EmployeeDto> GetEmployee(int employeeId)
-        {
-            throw new NotImplementedException();
         }
     }
 }
