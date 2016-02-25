@@ -33,9 +33,9 @@
     @{
         var imgdir = shiftnow != null ? "open" : "closed";
 
-        var dir = Directory.GetFiles($"img/bg/{imgdir}");
+        var dir = Directory.GetFiles($"wwwroot/img/bg/{imgdir}");
 
-        var img = dir[new Random().Next(dir.Length)];
+        var img = dir[new Random().Next(dir.Length)].Substring(8);
 
         @Html.Raw($"<img src=\"/{img}\" alt=\"\">")
     }
