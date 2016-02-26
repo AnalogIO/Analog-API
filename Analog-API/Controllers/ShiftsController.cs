@@ -29,7 +29,7 @@ namespace Analog_API.Controllers
         [HttpGet("today")]
         public async Task<IEnumerable<Shift>> GetToday()
         {
-            return await _client.GetShifts(DateTime.Now);
+            return await _client.GetShifts(DateTime.Today);
         }
 
         [HttpGet("day/{date}")]

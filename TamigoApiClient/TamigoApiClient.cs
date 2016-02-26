@@ -12,8 +12,9 @@ namespace TamigoApiClient
     public class TamigoApiClient : ITamigoApiClient
     {
         private readonly HttpClient _client;
-        private readonly Task<string> _loginTask;
+        private Task<string> _loginTask;
         private string _token;
+        private readonly Action _relogin;
 
 
         public TamigoApiClient(string email, string password)
@@ -23,6 +24,8 @@ namespace TamigoApiClient
             _client.BaseAddress = new Uri("https://api.tamigo.com/");
 
             _loginTask = Login(email, password);
+
+            _relogin = () => { _loginTask = Login(email, password); };
         }
 
         private async Task<string> Login(string email, string password)
@@ -110,6 +113,13 @@ namespace TamigoApiClient
                         Employees = grouping.Select(shift => shift.EmployeeName.Split(' ').First())
                     });
             }
+            else
+            {
+                // The api probably returned unauthorized, because the token needs to be refreshed.
+                _token = null;
+                _relogin();
+            }
+            
             return new Shift[0];
         }
 
