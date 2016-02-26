@@ -10,6 +10,7 @@ namespace Analog_API
 {
     public class Startup
     {
+        // ReSharper disable once UnusedParameter.Local
         public Startup(IHostingEnvironment env)
         {
             // Set up configuration sources.
@@ -32,7 +33,7 @@ namespace Analog_API
             var info = Configuration.Get<ApplicationInfo>("secrets");
 
             services.AddSingleton<ITamigoApiClient>(
-                provider => new CachedTamigoClient(new TamigoApiClient.TamigoApiClient(info.Username, info.Password)));
+                provider => new CachedTamigoClient(new TamigoClient(info.Username, info.Password)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

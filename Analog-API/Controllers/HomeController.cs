@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
@@ -19,7 +17,7 @@ namespace Analog_API.Controllers
         {
             var client = new HttpClient();
 
-            var shifts = JsonConvert.DeserializeObject<IEnumerable<Shift>>(await client.GetStringAsync("http://localhost/api/shifts"));
+            var shifts = JsonConvert.DeserializeObject<IEnumerable<ShiftDto>>(await client.GetStringAsync("http://localhost/api/shifts"));
 
             return View(shifts);
         }

@@ -21,15 +21,15 @@ namespace Analog_API.Controllers
 
         // GET: api/shifts
         [HttpGet]
-        public async Task<IEnumerable<Shift>> Get()
+        public async Task<IEnumerable<ShiftDto>> Get()
         {
             return (await _client.GetShifts()).Where(shift => shift.Close > DateTime.Now);
         }
 
         [HttpGet("today")]
-        public async Task<IEnumerable<Shift>> GetToday()
+        public async Task<IEnumerable<ShiftDto>> GetToday()
         {
-            return await _client.GetShifts(DateTime.Now);
+            return await _client.GetShifts(DateTime.Today);
         }
 
         [HttpGet("day/{date}")]

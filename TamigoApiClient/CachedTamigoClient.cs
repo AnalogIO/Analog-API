@@ -10,13 +10,13 @@ namespace TamigoApiClient
     {
         private static readonly TimeSpan FiveMinutes = TimeSpan.FromMinutes(5);
         private readonly ITamigoApiClient _client;
-        private List<Shift> _cache;
+        private List<ShiftDto> _cache;
         private DateTime _lastRefresh;
 
         public CachedTamigoClient(ITamigoApiClient client)
         {
             _client = client;
-            _cache = new List<Shift>();
+            _cache = new List<ShiftDto>();
             FillCacheBackground();
         }
 
@@ -33,38 +33,40 @@ namespace TamigoApiClient
 
         public async Task FillCache()
         {
-            if (DateTime.Now - _lastRefresh > FiveMinutes || !_cache.Any())
+            if (DateTime.Now - _lastRefresh > FiveMinutes 
+                || !_cache.Any()
+                || (_cache.Any(shift => shift.Open < DateTime.Now) && DateTime.Now.Subtract(_cache.Where(shift => shift.Open < DateTime.Now).Max(shift => shift.Open)) < DateTime.Now.Subtract(_lastRefresh)))
             {
                 _lastRefresh = DateTime.Now;
-                var newCache = new List<Shift>();
+                var newCache = new List<ShiftDto>();
                 newCache.AddRange(await _client.GetShifts());
                 _cache = newCache;
             }
         }
 
-        public async Task<bool> IsOpen()
+        public Task<bool> IsOpen()
         {
-            await FillCache();
-            return _cache.Any(shift => shift.Open < DateTime.Now && DateTime.Now < shift.Close);
+            FillCacheBackground();
+            return Task.FromResult(_cache.Any(shift => shift.Open < DateTime.Now && DateTime.Now < shift.Close));
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts()
+        public Task<IEnumerable<ShiftDto>> GetShifts()
         {
-            await FillCache();
-            return _cache;
+            FillCacheBackground();
+            return Task.FromResult(_cache.AsEnumerable());
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts(DateTime date)
+        public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime date)
         {
-            await FillCache();
+            FillCacheBackground();
             if (_cache.Exists(shift => shift.Open.Date == date.Date))
                 return _cache.Where(d => d.Open.Date == date.Date);
             return await _client.GetShifts(date);
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts(DateTime @from, DateTime to)
+        public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime @from, DateTime to)
         {
-            await FillCache();
+            FillCacheBackground();
             if (_cache.Exists(shift => shift.Open.Date == from.Date) &&
                 _cache.Exists(shift => shift.Open.Date == to.Date))
                 return _cache.Where(shift => shift.Open > from && shift.Close < to);

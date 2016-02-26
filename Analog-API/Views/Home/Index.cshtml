@@ -1,7 +1,8 @@
-﻿@using System.Text
+﻿@using System.IO
+@using System.Text
 @using System.Threading.Tasks
 @using TamigoApiClient.Models
-@model IEnumerable<Shift>
+@model IEnumerable<ShiftDto>
 @{
     var shiftnow = Model.SingleOrDefault(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
 }
@@ -28,9 +29,17 @@
     <meta name="google-site-verification" content="GQr_OfGy4IUUx6t3eRJAZXRTFB0uw3Q3GHQ4-qieUsY"/>
 </head>
 <body>
-    <div id="background">
-        <img src="/img/bg/open/white_record.gif" alt="">
-    </div>
+<div id="background">
+    @{
+        var imgdir = shiftnow != null ? "open" : "closed";
+
+        var dir = Directory.GetFiles($"wwwroot/img/bg/{imgdir}");
+
+        var img = dir[new Random().Next(dir.Length)].Substring(8);
+
+        @Html.Raw($"<img src=\"/{img}\" alt=\"\">")
+    }
+</div>
     <div id="openingHours" class="longCaptions">
         <h1><h1>
                 @(shiftnow != null ? Html.Raw("We're Åpen!") : Html.Raw("We're Cløsed!"))
@@ -50,7 +59,7 @@
         <h2>Opening hours the next 7 days:</h2>
         <ol>
             @{
-                var shifts = new List<Shift>();
+                var shifts = new List<ShiftDto>();
 
                 foreach (var shift in Model)
                 {
