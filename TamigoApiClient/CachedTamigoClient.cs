@@ -10,13 +10,13 @@ namespace TamigoApiClient
     {
         private static readonly TimeSpan FiveMinutes = TimeSpan.FromMinutes(5);
         private readonly ITamigoApiClient _client;
-        private List<Shift> _cache;
+        private List<ShiftDto> _cache;
         private DateTime _lastRefresh;
 
         public CachedTamigoClient(ITamigoApiClient client)
         {
             _client = client;
-            _cache = new List<Shift>();
+            _cache = new List<ShiftDto>();
             FillCacheBackground();
         }
 
@@ -38,7 +38,7 @@ namespace TamigoApiClient
                 || (_cache.Any(shift => shift.Open < DateTime.Now) && DateTime.Now.Subtract(_cache.Where(shift => shift.Open < DateTime.Now).Max(shift => shift.Open)) < DateTime.Now.Subtract(_lastRefresh)))
             {
                 _lastRefresh = DateTime.Now;
-                var newCache = new List<Shift>();
+                var newCache = new List<ShiftDto>();
                 newCache.AddRange(await _client.GetShifts());
                 _cache = newCache;
             }
@@ -50,13 +50,13 @@ namespace TamigoApiClient
             return _cache.Any(shift => shift.Open < DateTime.Now && DateTime.Now < shift.Close);
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts()
+        public async Task<IEnumerable<ShiftDto>> GetShifts()
         {
             await FillCache();
             return _cache;
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts(DateTime date)
+        public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime date)
         {
             await FillCache();
             if (_cache.Exists(shift => shift.Open.Date == date.Date))
@@ -64,7 +64,7 @@ namespace TamigoApiClient
             return await _client.GetShifts(date);
         }
 
-        public async Task<IEnumerable<Shift>> GetShifts(DateTime @from, DateTime to)
+        public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime @from, DateTime to)
         {
             await FillCache();
             if (_cache.Exists(shift => shift.Open.Date == from.Date) &&

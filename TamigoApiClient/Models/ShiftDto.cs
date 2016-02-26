@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TamigoApiClient.Models
 {
-    public class Shift
+    public class ShiftDto
     {
         public DateTime Open { get; set; }
         public DateTime Close { get; set; }

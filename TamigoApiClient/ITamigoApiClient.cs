@@ -8,8 +8,8 @@ namespace TamigoApiClient
     public interface ITamigoApiClient : IDisposable
     {
         Task<bool> IsOpen();
-        Task<IEnumerable<Shift>> GetShifts();
-        Task<IEnumerable<Shift>> GetShifts(DateTime date);
-        Task<IEnumerable<Shift>> GetShifts(DateTime from, DateTime to);
+        Task<IEnumerable<ShiftDto>> GetShifts();
+        Task<IEnumerable<ShiftDto>> GetShifts(DateTime date);
+        Task<IEnumerable<ShiftDto>> GetShifts(DateTime from, DateTime to);
     }
 }

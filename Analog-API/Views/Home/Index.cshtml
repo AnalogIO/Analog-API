@@ -2,7 +2,7 @@
 @using System.Text
 @using System.Threading.Tasks
 @using TamigoApiClient.Models
-@model IEnumerable<Shift>
+@model IEnumerable<ShiftDto>
 @{
     var shiftnow = Model.SingleOrDefault(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
 }
@@ -59,7 +59,7 @@
         <h2>Opening hours the next 7 days:</h2>
         <ol>
             @{
-                var shifts = new List<Shift>();
+                var shifts = new List<ShiftDto>();
 
                 foreach (var shift in Model)
                 {
