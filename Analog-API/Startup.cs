@@ -1,5 +1,4 @@
 using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Diagnostics;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +42,6 @@ namespace Analog_API
             loggerFactory.AddDebug();
 
             app.UseIISPlatformHandler();
-            app.UseStatusCodePages();
 
             app.UseStaticFiles();
 
