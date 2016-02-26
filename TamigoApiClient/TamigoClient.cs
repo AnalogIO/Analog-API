@@ -98,9 +98,12 @@ namespace TamigoApiClient
             var tasks = Enumerable
                 .Range(0, (to - from).Days + 1)
                 .Select(offset => from.AddDays(offset))
-                .Select(async date => result.AddRange(await GetShifts(date)));
+                .Select(async date => await GetShifts(date));
 
-            await Task.WhenAll(tasks);
+            foreach (var task in tasks)
+            {
+                result.AddRange(await task);
+            }
 
             return result;
         }
