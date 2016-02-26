@@ -44,21 +44,21 @@ namespace TamigoApiClient
             }
         }
 
-        public async Task<bool> IsOpen()
+        public Task<bool> IsOpen()
         {
-            await FillCache();
-            return _cache.Any(shift => shift.Open < DateTime.Now && DateTime.Now < shift.Close);
+            FillCacheBackground();
+            return Task.FromResult(_cache.Any(shift => shift.Open < DateTime.Now && DateTime.Now < shift.Close));
         }
 
-        public async Task<IEnumerable<ShiftDto>> GetShifts()
+        public Task<IEnumerable<ShiftDto>> GetShifts()
         {
-            await FillCache();
-            return _cache;
+            FillCacheBackground();
+            return Task.FromResult(_cache.AsEnumerable());
         }
 
         public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime date)
         {
-            await FillCache();
+            FillCacheBackground();
             if (_cache.Exists(shift => shift.Open.Date == date.Date))
                 return _cache.Where(d => d.Open.Date == date.Date);
             return await _client.GetShifts(date);
@@ -66,7 +66,7 @@ namespace TamigoApiClient
 
         public async Task<IEnumerable<ShiftDto>> GetShifts(DateTime @from, DateTime to)
         {
-            await FillCache();
+            FillCacheBackground();
             if (_cache.Exists(shift => shift.Open.Date == from.Date) &&
                 _cache.Exists(shift => shift.Open.Date == to.Date))
                 return _cache.Where(shift => shift.Open > from && shift.Close < to);
