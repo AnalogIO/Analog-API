@@ -122,7 +122,9 @@ namespace TamigoApiClient
                         Open = grouping.Key,
                         Close = grouping.First().EndTime,
                         Employees = grouping.Select(shift => shift.EmployeeName.Split(' ').First())
-                    }).OrderBy(shift => shift.Open);
+                    })
+                    .OrderBy(shift => shift.Open)
+                    .Where(shift => shift.Employees.Any(employee => employee != "Vacant"));
             }
             else
             {
