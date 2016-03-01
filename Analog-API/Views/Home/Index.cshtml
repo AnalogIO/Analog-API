@@ -69,9 +69,10 @@
                     }
                     else
                     {
-                        if (shifts.Last().Close == shift.Open)
+                        var s = shifts.SingleOrDefault(ss => ss.Close == shift.Open);
+                        if (s != null)
                         {
-                            shifts.Last().Close = shift.Close;
+                            s.Close = shift.Close;
                         }
                         else
                         {
