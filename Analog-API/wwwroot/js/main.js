@@ -4,7 +4,10 @@ $(document).ready(function() {
   getTracks(function(data){
     $('.music-information').html(data);
   });
-
+  window.setInterval(function() {
+    getTracks(function(data){
+      $('.music-information').html(data);
+    })}, 30000);
 });
 
 
