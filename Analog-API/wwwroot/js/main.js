@@ -53,13 +53,6 @@ function fixBackgroundPlacement() {
 		jQuery(bgSelector).css('left', -(horizontalOffset/2));
 	}
 }
-/**
- * Queries Last FM Api and retrieve last played tracks
- * API KEY:           34454ca3b453842c6bb875768a7d238c
- * SECRET:            eadaf70ea1275fcd49c8a31f104afaf9
- * USER:              AnalogIO
- * LAST-FM PASSWORD:  analog@test1
- */
 function getTracks (callback) {
   var userid = 'AnalogIO';
   var lastfm_api_key = '34454ca3b453842c6bb875768a7d238c';
