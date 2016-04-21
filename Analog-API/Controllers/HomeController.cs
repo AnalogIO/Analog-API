@@ -12,12 +12,17 @@ namespace Analog_API.Controllers
     [Route("")]
     public class HomeController : Controller
     {
+        private readonly HttpClient _client;
+
+        public HomeController(HttpClient client)
+        {
+            _client = client;
+        }
+
         // GET: /<controller>/
         public async Task<IActionResult> Index()
         {
-            var client = new HttpClient();
-
-            var shifts = JsonConvert.DeserializeObject<IEnumerable<ShiftDto>>(await client.GetStringAsync("http://localhost/api/shifts"));
+            var shifts = JsonConvert.DeserializeObject<IEnumerable<ShiftDto>>(await _client.GetStringAsync("http://localhost/api/shifts"));
 
             return View(shifts);
         }

@@ -1,10 +1,11 @@
-﻿@using System.IO
+﻿@using System.Collections
+@using System.IO
 @using System.Text
 @using System.Threading.Tasks
 @using TamigoApiClient.Models
 @model IEnumerable<ShiftDto>
 @{
-    var shiftnow = Model.SingleOrDefault(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
+    var shiftnow = Model.FirstOrDefault(shift => shift.Open < DateTime.Now && shift.Close > DateTime.Now);
 }
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -15,10 +16,10 @@
  <!--<![endif]-->
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Café Analog</title>
     <meta name="description" content="When is Cafe Analog open? This site will show you when Analog is open.">
-    <meta name="tags" tags="cafe analog open ITU IT-university close analogue caffe">
+    <meta name="tags" content="cafe analog open ITU IT-university close analogue caffe">
     <meta name="viewport" content="width=device-width">
 
     <!-- Favicons -->
@@ -47,9 +48,8 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link href="//fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-
-    <meta name="google-site-verification" content="GQr_OfGy4IUUx6t3eRJAZXRTFB0uw3Q3GHQ4-qieUsY"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
 </head>
 <body>
 <div id="background">
@@ -58,15 +58,16 @@
 
         var dir = Directory.GetFiles($"wwwroot/img/bg/{imgdir}");
 
-        var img = dir[new Random().Next(dir.Length)].Substring(8);
+        var img = dir[new Random().Next(dir.Length)].Replace("\\", "/").Substring(8);
 
         @Html.Raw($"<img src=\"/{img}\" alt=\"\">")
     }
 </div>
     <div id="openingHours" class="longCaptions">
-        <h1><h1>
-                @(shiftnow != null ? Html.Raw("We're Åpen!") : Html.Raw("We're Cløsed!"))
-            </h1>
+        <h1>
+            @(shiftnow != null ? Html.Raw("We're Åpen!") : Html.Raw("We're Cløsed!"))
+        </h1>
+        
             @{
                 if (shiftnow != null)
                 {
@@ -78,9 +79,10 @@
                     }
                     @Html.Raw(builder.ToString().Substring(0, builder.Length - 3))
                 }
-            }</h1>
+            }
+        
         <h2>Opening hours the next 7 days:</h2>
-        <ol>
+        <ul>
             @{
                 var shifts = new List<ShiftDto>();
 
@@ -131,28 +133,12 @@
                     @Html.Raw($"\t\t<li>{shift.Open.DayOfWeek.ToString().Substring(0,3)} {shift.Open.Day}{dateending}: {shift.Open.ToString("HH:mm")} - {shift.Close.ToString("HH:mm")}</li>{Environment.NewLine}")
                 }
             }
-        </ol>
+        </ul>
 
         <a class="email" href="mailto:analogen@cafeanalog.dk">E-mail us!</a>
         <br>
         <div class="music-information"></div>
         <a class="lastfm-link" href="http://last.fm/user/AnalogIO">View our previous tracklist</a>
     </div>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
-    <script src="/js/plugins.js"></script>
-    <script src="/js/main.js"></script>
-
-    <script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-38442215-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-    </script>
 </body>
 </html>

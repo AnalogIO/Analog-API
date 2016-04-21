@@ -28,10 +28,7 @@
   },
 
   "frameworks": {
-    "dnx451": {
-      "frameworkAssemblies": {
-      }
-    },
+    "dnx451": { },
     "dnxcore50": { }
   },
 

@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,17 +13,18 @@ namespace Analog_API
     {
         // ReSharper disable once UnusedParameter.Local
         public Startup(IHostingEnvironment env)
-        {
+        { 
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json");
             builder.AddJsonFile("../SECRETS.json");
 
             builder.AddEnvironmentVariables();
+            
             Configuration = builder.Build();
         }
 
-        public IConfigurationRoot Configuration { get; set; }
+        private IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -32,15 +34,19 @@ namespace Analog_API
 
             var info = Configuration.Get<ApplicationInfo>("secrets");
 
-            services.AddSingleton<ITamigoApiClient>(
-                provider => new CachedTamigoClient(new TamigoClient(info.Username, info.Password)));
+            services.AddInstance<ITamigoApiClient>(new CachedTamigoClient(new TamigoClient(info.Username, info.Password)));
+
+            services.AddScoped<HttpClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            if (env.IsDevelopment())
+            {
+                loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+                loggerFactory.AddDebug();
+            }
 
             app.UseIISPlatformHandler();
 
@@ -49,10 +55,10 @@ namespace Analog_API
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "Default",
-                    template: "",
-                    defaults: new {controller = "Home", action = "Index"}
-                    );
+                    "Default",
+                    "{controller}/{action}/{id}",
+                    new { controller = "Home", action = "Index" }
+                );
             });
         }
 
